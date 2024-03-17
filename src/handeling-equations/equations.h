@@ -47,4 +47,3 @@ std::string parenthesizeExpression(const std::string& exp)
     temp += ")";
     return finalExpression + temp + ")";
 }
-
