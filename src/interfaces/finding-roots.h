@@ -2,50 +2,81 @@
 #include <vector>
 #include <string>
 
-std::string parenthesizeExpression(const std::string &exp);
-std::string formatExpression(const std::string &exp);
+std::string parenthesizeExpression(const std::string& exp);
+std::string formatExpression(const std::string& exp);
 
-bool isFunction(const std::string &str)
+/**
+ * isFunction: checks if the given string matches a valid mathematical function
+ * @str: the string to check
+ * Return: ture if @str is a valid  mathematical function, otherwise false 
+ */
+bool isFunction(const std::string& str)
 {
-    if (str == "(log" || str == "(sqrt" || str == "(ln" || str == "(sin" || str == "(cos" || str == "(tan" ||
+    if (str == "(log" || str == "(sqrt" || str == "(ln" || str == "(sin" || str == "(cos" || str == "(tan" || 
         str == "(sec" || str == "(csc" || str == "(cot" || str == "(exp" || str == "(pow")
         return true;
     return false;
 }
 
-std::string parenthesizeExpression(const std::string &exp)
+
+/**
+ * parenthesizeExpression: formattes an expression into a form that can be used,
+ * putting parentheses around functions, their arguments and variables,
+ * as well as adding "*" between numbers and variables or expressions.
+ * @exp: the expression to format
+ * Return: the formated vesrion of @exp.
+ */
+std::string parenthesizeExpression(const std::string& exp)
 {
     std::string finalExpression = "(";
     std::string temp;
+    size_t open = 1;
 
     for (char c : exp)
     {
+        if (c == '(')
+            open++;
+        if (c == ')')
+            open--;
         if (temp.empty())
         {
-            if (isdigit(c))
+            if (isdigit(c) || c == '.')
             {
                 finalExpression += c;
             }
             else if (isalpha(c))
             {
-                if (finalExpression[finalExpression.length() - 1] != '(')
-                    finalExpression += "*";
-                temp = "(";
+                if (finalExpression.back() != '(')
+                {
+                    finalExpression += "*(";
+                    open++;
+                }
                 temp += c;
             }
         }
         else
         {
+            if (isdigit(temp.back()) && !isdigit(c) && c != '.' && c != ')')
+            {
+                temp += "*(";
+                open++;
+            }
             temp += c;
         }
         if (isFunction(temp))
         {
             finalExpression += temp + "(";
+            open++;
             temp = "";
         }
     }
-    temp += ")";
-    return finalExpression + temp + ")";
+    finalExpression += temp;
+    while (open > 0)
+    {
+        finalExpression += ")";
+        open--;
+    }
+    return finalExpression;
 }
 
 /**
@@ -56,7 +87,7 @@ std::string parenthesizeExpression(const std::string &exp)
 bool isOperator(const char &c) { return (c == '+' || c == '-' || c == '/' || c == '*'); }
 
 /**
- * popFront - Removes the first element of a vector.
+ * popFront: Removes the first element of a vector.
  * @v: The vector to pop.
  * Return: The first element of the vector (that was removed).
  */
