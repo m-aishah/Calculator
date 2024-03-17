@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "finding-roots.h"
+#include "equations.h"
 
 int main()
 {
