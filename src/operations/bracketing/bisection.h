@@ -45,17 +45,20 @@ class bisection : public bracketing
             throw std::invalid_argument("Please provide a valid Error Percentage");
         }
         double result, previous;
-        for (double error = 100; error < err; error = approximateError(previous, result)) {
+        for (double error = 100, int i = 0; error < err;) {
+            previous = result;
             result = (lower + upper) / 2;
             double evaluatedresult = evaluate(equation, result);
             double evaluatedLower = evaluate(equation, lower);
             if ((evaluatedLower * evaluatedresult) > 0)
-            lower = result;
+                lower = result;
             else if ((evaluatedLower * evaluatedresult) < 0)
-            upper = result;
+                upper = result;
             else
-            return result;
-            previous = result;
+                return result;
+            if(i != 0)
+                error = approximateError(previous, result);
+            i++;
         }
         return result;
     }
