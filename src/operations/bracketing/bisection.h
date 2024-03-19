@@ -43,7 +43,7 @@ class bisection : public bracketing
     double findRoots(const std::string& equation, double lower, double upper, const double& err) override
     {
         if (err < 0 || err >= 100) {
-            throw std::invalid_argument("Please provide a valid number of iterations");
+            throw std::invalid_argument("Please provide a valid Error Percentage");
         }
         double result, previous;
         for (double error = 100; error < err; error = approximateError(previous, result)) {
