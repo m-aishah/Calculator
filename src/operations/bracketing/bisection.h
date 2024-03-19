@@ -46,7 +46,8 @@ class bisection : public bracketing
         }
         double result, previous;
         for (double error = 100, int i = 0; error < err;) {
-            previous = result;
+            if(i != 0)
+                previous = result;
             result = (lower + upper) / 2;
             double evaluatedresult = evaluate(equation, result);
             double evaluatedLower = evaluate(equation, lower);
