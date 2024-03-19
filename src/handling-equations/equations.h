@@ -26,57 +26,20 @@ bool isFunction(const std::string& str)
  * @exp: the expression to format
  * Return: the formated vesrion of @exp.
  */
-std::string parenthesizeExpression(const std::string& exp)
+double evalExpression(const std::string& exp, double x)
 {
     std::string finalExpression = "(";
     std::string temp;
     size_t open = 1;
-
-    for (char c : exp)
-    {
-        if (c == '(')
-            open++;
-        if (c == ')')
-            open--;
-        if (temp.empty())
-        {
-            if (isdigit(c) || c == '.')
-            {
-                finalExpression += c;
-            }
-            else if (isalpha(c))
-            {
-                if (finalExpression.back() != '(')
-                {
-                    finalExpression += "*(";
-                    open++;
-                }
-                temp += c;
-            }
-        }
-        else
-        {
-            if (isdigit(temp.back()) && !isdigit(c) && c != '.' && c != ')')
-            {
-                temp += "*(";
-                open++;
-            }
-            temp += c;
-        }
-        if (isFunction(temp))
-        {
-            finalExpression += temp + "(";
-            open++;
-            temp = "";
-        }
-    }
-    finalExpression += temp;
-    while (open > 0)
-    {
-        finalExpression += ")";
-        open--;
-    }
-    return finalExpression;
+    // Replace variable with the value of x. Somehow add multiplications(*) if the thing before it is a digit.
+    // Handle brackets.
+    // Handle decimal numbers
+    // Resolve the special functions.
+    // Handle regular multiplications like 2x
+    // Handle basic numbers like 5 alone.
+    // ENsure you consider higher prescedence for operations with brackets? Maybe once you see a bracket just send it to be evaluated. THINK ABOUT THIS!!!
+    
+    return 1;
 }
 
 /**
@@ -99,24 +62,37 @@ T popFront(std::vector<T> &v)
     return f;
 }
 
+double evaluateBasicOp (double lOperand, char op, double rOperand)
+{
+    if (op == '+')
+        return lOperand + rOperand;
+    else if (op == '-')
+        return lOperand - rOperand;
+    else if (op =='/')
+        return lOperand / rOperand;
+    else
+        return lOperand * rOperand;
+
+}
+
 /**
  * formatExpression: Converts a string rep. of a mathematical operation,
  * into a form that can be worked with.
  * @ exp - The mathematical expression in question.
  * Return: A properly parenthesized and formatted version of @exp.
  */
-std::string formatExpression(const std::string &exp)
+double formatExpression(const std::string &exp, double x)
 {
-    std::vector<std::string> operands;
+    std::vector<double> operands;
     std::vector<char> operators;
 
     std::string currentOperand;
 
     // Check that exp is not empty.
     if (exp.empty())
-        return NULL;
+        return 0;
 
-    // Split string into operands and operators and parenthesize operands.
+    // Split string into operands and operators and evaluate operands as you go.
     for (auto c : exp)
     {
         if (isOperator(c))
@@ -126,7 +102,7 @@ std::string formatExpression(const std::string &exp)
             // Push operand into appropriate operand vector.
             if (!currentOperand.empty())
             {
-                operands.push_back(parenthesizeExpression(currentOperand));
+                operands.push_back(evalExpression(currentOperand, x));
                 currentOperand.clear();
             }
             // Go to the next character.
@@ -135,23 +111,26 @@ std::string formatExpression(const std::string &exp)
         currentOperand += c;
     }
     // Push the last operand into the vector.
-    operands.push_back(parenthesizeExpression(currentOperand));
+    operands.push_back(evalExpression(currentOperand, x));
     // currentOperand.clear();
 
     // Assemble final expression.
-    std::string finalExpression = "(";
+    double result = popFront(operands);
+    double l, o, r;
     // Concatenate the first operand.
-    finalExpression += popFront(operands);
     // Interleave operands and operator
     while (!operands.empty())
     {
         // Pop operator, then operand from the front.
         if (!operators.empty())
-            finalExpression += popFront(operators);
-        finalExpression += popFront(operands);
-    }
-    // Add final parenthesis.
-    finalExpression += ")";
+        {
+            l = result;
+            o = popFront(operators);
+            r = popFront(operands);
+            result = evaluateBasicOp(l, o, r);
 
-    return (finalExpression);
+        }
+    }
+
+    return (result);
 }
