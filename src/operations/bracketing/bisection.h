@@ -11,7 +11,7 @@ class bisection : public bracketing
      * @n: number of iterations.
      * Return: the root of @equation between @lower and @upper.
      */
-    double findRoots(const std::string& equation, double& lower, double& upper, const int& n) override
+    double findRoots(const std::string& equation, double lower, double upper, const int& n) override
     {
         if (n <= 0) {
             throw std::invalid_argument("Please provide a valid number of iterations");
@@ -40,7 +40,7 @@ class bisection : public bracketing
      * @err: the error percentage to stop if approximate error is less than.
      * Return: the root of @equation between @lower and @upper.
      */
-    double findRoots(const std::string& equation, double& lower, double& upper, const double& err) override
+    double findRoots(const std::string& equation, double lower, double upper, const double& err) override
     {
         if (err < 0 || err >= 100) {
             throw std::invalid_argument("Please provide a valid number of iterations");
