@@ -16,9 +16,9 @@ class bisection : public bracketing
         if (n <= 0) {
             throw std::invalid_argument("Please provide a valid number of iterations");
         }
-        double result = (lower + upper) / 2;
-        double previous;
+        double result, previous;
         for (int i = 0; i < n; i++) {
+            result = (lower + upper) / 2;
             double evaluatedResult = evaluate(equation, result);
             double evaluatedLower = evaluate(equation, lower);
             if ((evaluatedLower * evaluatedResult) > 0)
@@ -45,9 +45,9 @@ class bisection : public bracketing
         if (err < 0 || err >= 100) {
             throw std::invalid_argument("Please provide a valid number of iterations");
         }
-        double result = (lower + upper) / 2;
-        double previous;
+        double result, previous;
         for (double error = 100; error < err; error = approximateError(previous, result)) {
+            result = (lower + upper) / 2;
             double evaluatedresult = evaluate(equation, result);
             double evaluatedLower = evaluate(equation, lower);
             if ((evaluatedLower * evaluatedresult) > 0)
