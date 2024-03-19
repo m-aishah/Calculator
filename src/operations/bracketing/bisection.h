@@ -49,11 +49,11 @@ class bisection : public bracketing
             if(i != 0)
                 previous = result;
             result = (lower + upper) / 2;
-            double evaluatedresult = evaluate(equation, result);
+            double evaluatedResult = evaluate(equation, result);
             double evaluatedLower = evaluate(equation, lower);
-            if ((evaluatedLower * evaluatedresult) > 0)
+            if ((evaluatedLower * evaluatedResult) > 0)
                 lower = result;
-            else if ((evaluatedLower * evaluatedresult) < 0)
+            else if ((evaluatedLower * evaluatedResult) < 0)
                 upper = result;
             else
                 return result;
