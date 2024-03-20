@@ -13,11 +13,11 @@ class bisection : public bracketing
      */
     double findRoots(const std::string& equation, double lower, double upper, const int& n) override
     {
-        if (n <= 0) {
+        if (n <= 0) 
             throw std::invalid_argument("Please provide a valid number of iterations");
-        }
         double result, evaluatedResult, evaluatedLower;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) 
+        {
             result = (lower + upper) / 2;
             evaluatedResult = evaluate(equation, result);
             evaluatedLower = evaluate(equation, lower);
@@ -41,11 +41,12 @@ class bisection : public bracketing
      */
     double findRoots(const std::string& equation, double lower, double upper, const double& err) override
     {
-        if (err < 0 || err >= 100) {
+        if (err < 0 || err >= 100) 
             throw std::invalid_argument("Please provide a valid Error Percentage");
-        }
+            
         double result, previous, evaluatedResult, evaluatedLower;
-        for (double error = 100, int i = 0; error < err;) {
+        for (double error = 100, int i = 0; error < err;) 
+        {
             if(i != 0)
                 previous = result;
             result = (lower + upper) / 2;
