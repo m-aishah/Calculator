@@ -1,96 +1,84 @@
-#include "../../interfaces/bracketing.h"
+#include "../../interfaces/open-methods.h"
 #include "../../errors/errors.h"
 
-class bisection : public bracketing
+class secant : protected openMethods
 {
+
     /**
      * findRoots: finds the root of the given equation
      * @equation: the string representation of the mathematical equation to find the root of.
-     * @lower: the lower bound for finding the root.
-     * @upper: the upper bound for finding the root.
+     * @previous: the value of x to start the evaluation with.
      * @n: number of iterations.
      * Return: the root of @equation between @lower and @upper.
      */
-    double findRoots(const std::string& equation, double lower, double upper, const int& n) override
+    double findRoots(const std::string& equation, const int& n, double previous, double extra = 0.0) override
     {
         if (n <= 0) 
             throw std::invalid_argument("Please provide a valid number of iterations");
-        double result, evaluatedResult, evaluatedLower;
+
+        double result = extra, evaluatedPrevious, evaluatedResult;
         for (int i = 0; i < n; i++) 
         {
-            result = (lower + upper) / 2;
+            evaluatedPrevious = evaluate(equation, previous);
             evaluatedResult = evaluate(equation, result);
-            evaluatedLower = evaluate(equation, lower);
-            if ((evaluatedLower * evaluatedResult) > 0)
-            lower = result;
-            else if ((evaluatedLower * evaluatedResult) < 0)
-            upper = result;
-            else
-            return result;
+            extra = result;
+            result = result - ((evaluatedResult * (previous - result))/(evaluatedPrevious - evaluatedResult));
+            previous = extra;
         }
+
         return result;
     }
 
     /**
      * findRoots: finds the root of the given equation
      * @equation: the string representation of the mathematical equation to find the root of.
-     * @lower: the lower bound for finding the root.
-     * @upper: the upper bound for finding the root.
+     * @previous: the value of x to start the evaluation with.
      * @err: the error percentage to stop if approximate error is less than.
      * Return: the root of @equation between @lower and @upper.
      */
-    double findRoots(const std::string& equation, double lower, double upper, const double& err) override
+    double findRoots(const std::string& equation, const double& err, double previous, double extra = 0.0) override
     {
         if (err < 0 || err >= 100) 
             throw std::invalid_argument("Please provide a valid Error Percentage");
-            
-        double result, previous, evaluatedResult, evaluatedLower;
+
+        double result = extra, evaluatedPrevious, evaluatedResult;
         for (double error = 100, int i = 0; error < err;) 
         {
-            if(i != 0)
-                previous = result;
-            result = (lower + upper) / 2;
+            evaluatedPrevious = evaluate(equation, previous);
             evaluatedResult = evaluate(equation, result);
-            evaluatedLower = evaluate(equation, lower);
-            if ((evaluatedLower * evaluatedResult) > 0)
-                lower = result;
-            else if ((evaluatedLower * evaluatedResult) < 0)
-                upper = result;
-            else
-                return result;
+            extra = result;
+            result = result - ((evaluatedResult * (previous - result))/(evaluatedPrevious - evaluatedResult));
+            previous = extra;
             if(i != 0)
                 error = approximateError(previous, result);
             i++;
         }
+
         return result;
     }
 
-    public:
-
     /**
      * operator (): overloads the function call operator. This allows us to use objects of this class as functions.
      * @equation: the string representation of the mathematical equation to find the root of.
-     * @lower: the lower bound for finding the root.
-     * @upper: the upper bound for finding the root.
+     * @x: the value of x to start the evaluation with.
      * @n: number of iterations.
      * Return: double 
      */
-    double operator()(const std::string& equation, double& lower, double& upper, const int& n)
+    double operator()(const std::string& equation, double& x1, double& x2, const int& n)
     {
-        return findRoots(equation, lower, upper, n);
+        return findRoots(equation, n, x1, x2);
     }
 
     /**
      * operator (): overloads the function call operator. This allows us to use objects of this class as functions.
      * @equation: the string representation of the mathematical equation to find the root of.
-     * @lower: the lower bound for finding the root.
-     * @upper: the upper bound for finding the root.
+     * @x: the value of x to start the evaluation with.
      * @err: the error percentage to stop if approximate error is less than.
      * Return: the root of @equation between @lower and @upper
      */
-    double operator()(const std::string& equation, double& lower, double& upper, const double& err = 1)
+    double operator()(const std::string& equation, double& x1, double& x2, const double& err = 1)
     {
-        return findRoots(equation, lower, upper, err);
+        return findRoots(equation, err, x1, x2);
     }
 
 };
