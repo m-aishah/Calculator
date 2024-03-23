@@ -2,56 +2,82 @@
 
 class parabolicInterpolation : public unconstrainedOptimization
 {
-
     /**
-     * findMax - Finds the maximum point of a given function.
+     * findMaxMin - Finds the maximum/minimum point of a given function.
      * @equation: String representation of the mathematical equation of the function in question.
      * @x0: x value of the first coordinate.
      * @x1: x value of the second coordinate.
      * @x2: x value of the third coordinate.
-     * @n: Number of iterations.
-     * Returns: the maximum point of the provided @equation.
+     * @maxIter: Number of iterations.
+     * @findMax: Serves as a flag to indicate weather to find maximum or minimum.
+     * Returns: the maximum/minimum point of the provided @equation.
      */
-    double findMax(const std::string &equation, double x0, double x1, double x2, const int &n) override
+    std::tuple<double, double> findMaxMin(const std::string &equation, double x0, double x1, double x2, const int maxIter, bool findMax)
     {
-        if (n <= 0)
+        if (maxIter <= 0)
             throw std::invalid_argument("Please provide a valid number of iterations");
 
-        double x3, fx0, fx1, fx2, result = 0.0;
-        for (int i = 0; i < n; i++)
+        double x3, f0, f1, f2, fOptimum = 0.0;
+        for (int i = 0; i < maxIter; i++)
         {
-            fx0 = evaluate(equation, x0);
-            fx1 = evaluate(equation, x1);
-            fx2 = evaluate(equation, x2);
+            f0 = evaluate(equation, x0);
+            f1 = evaluate(equation, x1);
+            f2 = evaluate(equation, x2);
 
-            double denominator = 2 * ((fx0 * (x1 - x2)) + (fx1 * (x2 - x0)) + (fx2 * (x0 - x1)));
+            double denominator = 2 * ((f0 * (x1 - x2)) + (f1 * (x2 - x0)) + (f2 * (x0 - x1)));
             if (denominator == 0.0) // Handle division by zero.
                 throw std::runtime_error("Division by zero encountered");
-            x3 = ((fx0 * (pow(x1, 2) - pow(x2, 2))) +
-                  (fx1 * (pow(x2, 2) - pow(x0, 2))) +
-                  (fx2 * (pow(x0, 2) - pow(x1, 2)))) /
+            x3 = ((f0 * (pow(x1, 2) - pow(x2, 2))) +
+                  (f1 * (pow(x2, 2) - pow(x0, 2))) +
+                  (f2 * (pow(x0, 2) - pow(x1, 2)))) /
                  denominator;
 
             // Update variables.
-            x2 = (x1 > x3) ? x1 : x2;
-            x0 = (x2 == x1) ? x0 : x1;
-            x1 = x3;
-            result = evaluate(equation, x3);
+            if (findMax)
+            {
+                x2 = (x1 > x3) ? x1 : x2;
+                x0 = (x2 == x1) ? x0 : x1;
+                x1 = x3;
+                fOptimum = evaluate(equation, x3);
+            }
+            else
+            {
+                x2 = (x1 < x3) ? x1 : x2;
+                x0 = (x2 == x1) ? x0 : x1;
+                x1 = x3;
+                fOptimum = evaluate(equation, x3);
+            }
         }
 
-        return result;
+        return std::make_tuple(x3, fOptimum);
     }
 
 public:
     /**
-     * operator (): overloads the function call operator. This allows us to use objects of this class as functions.
+     * findMaximum - Finds the maximum point of a given function.
+     * @equation: String representation of the mathematical equation of the function in question.
      * @x0: x value of the first coordinate.
      * @x1: x value of the second coordinate.
      * @x2: x value of the third coordinate.
-     * @n: Number of iterations.
+     * @maxIter: Number of iterations.
+     * Returns: the maximum point of the provided @equation.
      */
-    double operator()(const std::string &equation, double &x0, double &x1, double &x2, const int &n)
+    std::tuple<double, double> findMaximum(const std::string &equation, double x0, double x1, double x2, const int maxIter) override
     {
-        return findMax(equation, x0, x1, x2, n);
+        return findMaxMin(equation, x0, x1, x2, maxIter, true);
+    }
+
+    /**
+     * findMinimum - Finds the minimum point of a given function.
+     * @equation: String representation of the mathematical equation of the function in question.
+     * @x0: x value of the first coordinate.
+     * @x1: x value of the second coordinate.
+     * @x2: x value of the third coordinate.
+     * @maxIter: Number of iterations.
+     * Returns: the minimum point of the provided @equation.
+     */
+    std::tuple<double, double> findMinimum(const std::string &equation, double x0, double x1, double x2, const int maxIter) override
+    {
+        return findMaxMin(equation, x0, x1, x2, maxIter, false);
     }
 };
