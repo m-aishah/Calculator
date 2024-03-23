@@ -9,8 +9,8 @@ class parabolicInterpolation : public unconstrainedOptimization
      * @x1: x value of the second coordinate.
      * @x2: x value of the third coordinate.
      * @maxIter: Number of iterations.
-     * @findMax: Serves as a flag to indicate weather to find maximum or minimum.
-     * Returns: the maximum/minimum point of the provided @equation.
+     * @findMax: Serves as a flag to indicate whether to find maximum or minimum.
+     * Returns: the x and y coordinates of the maximum/minimum point of the provided @equation.
      */
     std::tuple<double, double> findMaxMin(const std::string &equation, double x0, double x1, double x2, const int maxIter, bool findMax)
     {
@@ -60,7 +60,7 @@ public:
      * @x1: x value of the second coordinate.
      * @x2: x value of the third coordinate.
      * @maxIter: Number of iterations.
-     * Returns: the maximum point of the provided @equation.
+     * Returns: the x and y coordinates of the maximum point of the provided @equation.
      */
     std::tuple<double, double> findMaximum(const std::string &equation, double x0, double x1, double x2, const int maxIter) override
     {
@@ -74,7 +74,7 @@ public:
      * @x1: x value of the second coordinate.
      * @x2: x value of the third coordinate.
      * @maxIter: Number of iterations.
-     * Returns: the minimum point of the provided @equation.
+     * Returns: the x and y coordinates of the minimum point of the provided @equation.
      */
     std::tuple<double, double> findMinimum(const std::string &equation, double x0, double x1, double x2, const int maxIter) override
     {
