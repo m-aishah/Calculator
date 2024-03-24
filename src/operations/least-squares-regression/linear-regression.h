@@ -8,7 +8,7 @@ public:
      * @yValues: Vector containing y coordinates.
      * Returns: the coefficients of a0 and a1.
      */
-    std::pair<double, double> fitLine(const std::vector<double> &xValues, const std::vector<double> &yValues)
+    std::pair<double, double> fitLine(const std::vector<double> &xValues, const std::vector<double> &yValues) override
     {
         int n = xValues.size();
 
