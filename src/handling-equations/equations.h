@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stack>
 
 std::string parenthesizeExpression(const std::string &exp);
 std::string formatExpression(const std::string &exp);
@@ -19,6 +20,77 @@ bool isFunction(const std::string &str)
 }
 
 /**
+* priority - Checks the priority of an operator
+* @y: The operator
+* Return: Integer which represents the priority of the operator
+*/
+int priority(char y)
+{
+    //sinx , tan , log etc to be added
+    //considering shunting yard algorithm
+
+    if (y == '(')
+        return 0;
+    if (y == '-' || y == '+')
+        return 1;
+    if (y == '*' || y == '/')
+        return 2;
+}
+
+/**
+* infixToPostFix - Convert a string to a postfix
+* @expr: The string to convert
+* Return: The postfix //to be implemented
+*/
+void infixToPostfix(std::string& exp)
+{
+    //only pass string from 
+
+    std::stack<char> variables;
+    auto chr = exp.begin();
+    while (chr != exp.end())
+    {
+        if (isalnum(*chr))
+            std::cout << *chr;
+        else if (*chr == '(')
+            variables.push(*chr);
+        //check if its an opening bracket
+        else if (*chr == ')')
+        {
+            //pop until you encoubnter a opening bracaket
+
+            while (!variables.empty() && variables.top() != '(')
+            {
+                if (variables.top() != '(')
+                    //for now just print to the screen
+                    std::cout << variables.top();
+                variables.pop();
+            }
+        }
+        else
+        {
+            //check if the top of stack has higher priority
+            while (priority(variables.top()) >= priority(*chr))
+            {
+                std::cout << variables.top();
+                variables.pop();
+
+            }
+            variables.push(*chr);
+
+        }
+        chr++;
+    }
+    while (!variables.empty())
+    {
+        //check if there is anything in the stack
+        if (variables.top() != '(')
+            std::cout << variables.top();
+        variables.pop();
+    }
+
+}
+/**
  * parenthesizeExpression: formattes an expression into a form that can be used,
  * putting parentheses around functions, their arguments and variables,
  * as well as adding "*" between numbers and variables or expressions.
@@ -27,6 +99,7 @@ bool isFunction(const std::string &str)
  */
 double evalExpression(const std::string &exp, double x)
 {
+    //use infixToPostfix and evaluate functions 
     std::string finalExpression = "(";
     std::string temp;
     size_t open = 1;
