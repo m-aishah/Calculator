@@ -1,4 +1,5 @@
 #include "../../interfaces/least-squares-regression.h"
+#include <cmath>
 
 class linearRegression : public leastSquaresRegression
 {
@@ -8,7 +9,7 @@ public:
      * @yValues: Vector containing y coordinates.
      * Returns: the coefficients of a0 and a1.
      */
-    std::pair<double, double> fitLine(const std::vector<double> &xValues, const std::vector<double> &yValues) override
+    std::vector<double> fitLine(const std::vector<double> &xValues, const std::vector<double> &yValues) override
     {
         int n = xValues.size();
 
@@ -30,7 +31,12 @@ public:
         double a1 = (n * xySum - xSum * ySum) / (n * xSum_squared - xSum * xSum);
         double a0 = yMean - a1 * xMean;
 
-        return std::make_pair(a0, a1);
+        std::vector<double> coefficients = {a0, a1};
+
+        // Save coefficients for later use
+        fittedCoefficients = coefficients;
+
+        return coefficients;
     }
 
     /**
@@ -40,7 +46,7 @@ public:
      *
      * Returns: The coefficient of determinate (R^2).
      */
-    double calculateRSquared(const std::vector<double> &xValues, const std::vector<double> yValues, double a0, double a1)
+    double calculateRSquared(const std::vector<double> &xValues, const std::vector<double> &yValues) override
     {
         int n = xValues.size();
 
@@ -55,7 +61,7 @@ public:
         double sr = 0, st = 0;
         for (int i = 0; i < n; ++i)
         {
-            double yPredicted = a0 + a1 * xValues[i];
+            double yPredicted = fittedCoefficients[0] + fittedCoefficients[1] * xValues[i];
             sr += (yValues[i] - yPredicted) * (yValues[i] - yPredicted);
             st += (yValues[i] - yMean) * (yValues[i] - yMean);
         }
@@ -70,7 +76,7 @@ public:
      *
      * Returns: The standard error of estimate.
      */
-    double calculateStandardError(const std::vector<double> &xValues, const std::vector<double> &yValues, double a0, double a1)
+    double calculateStandardError(const std::vector<double> &xValues, const std::vector<double> &yValues) override
     {
         int n = xValues.size();
 
@@ -78,10 +84,13 @@ public:
         double sr = 0;
         for (int i = 0; i < n; ++i)
         {
-            double yPredicted = a0 + a1 * xValues[i];
+            double yPredicted = fittedCoefficients[0] + fittedCoefficients[1] * xValues[i];
             sr += (yValues[i] - yPredicted) * (yValues[i] - yPredicted);
         }
 
-        return std::sqrt(sr / (n - 2));
+        return sqrt(sr / (n - 2));
     }
+
+private:
+    std::vector<double> fittedCoefficients;
 };

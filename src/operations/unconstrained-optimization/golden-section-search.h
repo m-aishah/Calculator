@@ -4,7 +4,7 @@ class goldenSectionSearch : public unconstrainedOptimization
 {
 private:
     // The golden Ratio.
-    const double R = (std::sqrt(5) - 1) / 2;
+    const double R = (sqrt(5) - 1) / 2;
 
     /**
      * findMax - Finds the maximum/minimum point of a given function.
