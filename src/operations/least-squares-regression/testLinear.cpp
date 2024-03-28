@@ -9,7 +9,7 @@ void testLinearRegression()
     linearRegression linRegression;
 
     // Fit a linear regression line
-    std::vector<double> coefficients = linRegression.fitLine(xValues, yValues);
+    std::vector<double> coefficients = linRegression.fit(xValues, yValues);
 
     // Output the coefficients of the fitted line
     std::cout << "\nFitted Line Coefficients:" << std::endl;

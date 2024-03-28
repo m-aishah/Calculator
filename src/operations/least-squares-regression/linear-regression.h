@@ -4,12 +4,12 @@
 class linearRegression : public leastSquaresRegression
 {
 public:
-    /** fitLine - Performs least-squares fitting and return the coefficients a0 and a1.
+    /** fit - Performs least-squares fitting and return the coefficients a0 and a1.
      * @xValues: Vector containing x coordinates.
      * @yValues: Vector containing y coordinates.
      * Returns: the coefficients of a0 and a1.
      */
-    std::vector<double> fitLine(const std::vector<double> &xValues, const std::vector<double> &yValues) override
+    std::vector<double> fit(const std::vector<double> &xValues, const std::vector<double> &yValues, int degree = 1) override
     {
         int n = xValues.size();
 

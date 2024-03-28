@@ -12,7 +12,7 @@ void testPolynomialRegression()
 
     // Fit a second-order polynomial
     int degree = 2;
-    std::vector<double> coefficients = polyRegression.fitPolynomial(xValues, yValues, degree);
+    std::vector<double> coefficients = polyRegression.fit(xValues, yValues, degree);
 
     // Output the coefficients of the fitted polynomial
     std::cout << "Fitted Polynomial Coefficients:" << std::endl;

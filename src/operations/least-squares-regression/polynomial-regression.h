@@ -1,19 +1,19 @@
 #include <vector>
 #include <cmath>
 #include "../linear-equations/naive-gauss-elimination.h"
-#include "../interfaces/least-squares-regression.h"
+// #include "../../interfaces/least-squares-regression.h"
 
-class polynomialRegression : public leastSquaresRegression
+class polynomialRegression
 {
 public:
     /**
-     * fitPolynomial - Fits a polynomial of degree @degree to the given data points.
+     * fit - Fits a polynomial of degree @degree to the given data points.
      * @xValues: Vector containing x-coordinates.
      * @yValues: Vector containing y-coordinates.
      * @degree: degree of the polynomial.
      * Returns: the coefficients of the fitted polynomial after regression.
      */
-    std::vector<double> fitPolynomial(const std::vector<double> &xValues, const std::vector<double> &yValues, int degree) override
+    std::vector<double> fit(const std::vector<double> &xValues, const std::vector<double> &yValues, int degree)
     {
         int n = xValues.size();
         int m = degree + 1; // Number of coefficients including constant term
@@ -55,7 +55,7 @@ public:
      *
      * Returns: the correlation coefficient.
      */
-    double calculateRSquared(const std::vector<double> &xValues, const std::vector<double> &yValues) override
+    double calculateRSquared(const std::vector<double> &xValues, const std::vector<double> &yValues)
     {
         double yMean = calculateMean(yValues);
         double sTotal = calculateTotalSumOfSquares(yValues, yMean);
@@ -70,7 +70,7 @@ public:
      * @yValues: Vector containing y-coordinates.
      * Returns: the standard error of estimate.
      */
-    double calculateStandardError(const std::vector<double> &xValues, const std::vector<double> &yValues) override
+    double calculateStandardError(const std::vector<double> &xValues, const std::vector<double> &yValues)
     {
         double sResidual = calculateResidualSumOfSquares(xValues, yValues);
         int n = xValues.size();
