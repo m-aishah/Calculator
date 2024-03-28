@@ -2,8 +2,9 @@
 
 class Interpolation 
 {
-    public:
-        virtual double interpolationData(double x, double x1, double xo, double fxo, double fx1)=0;
-        ~Interpolation() {};
+    //public:
+        virtual double linearData(double x,double x0,double x1,double fx0,double fx1) = 0;
+        virtual double quadraticData(double x,double x0 ,double x1 ,double x2 ,double fx0 ,double fx1 ,double fx2) = 0;
+        //~Interpolation() {};
 
 };
